@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" onclick="fff();">
+
+<head>
+    <meta charset="UTF-8">
+    <title>我的数据</title>
+    <style>
+        .list_item {
+            position: relative;
+            width: 150px;
+            height: 160px;
+            /* margin: 0 auto; */
+            margin-right: 20px;
+            margin-top: 22px;
+            cursor: pointer;
+        }
+
+        .box_item {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 0 0 20px;
+            min-height: 182px;
+            align-content: flex-start;
+            margin: 0 auto;
+        }
+    </style>
+
+<style>
+  .el-header {
+    /*background-color: #B3C0D1;*/
+    color: #333;
+    line-height: 60px;
+  }
+
+  .el-aside {
+    color: #333;
+  }
+</style>
+        <script>
+        //显示弹框，并且根据结果是true或false来更改标题部分的颜色
+        function showlog_result(result) {//展示具体弹框内容，以及根据结果是否正确变更title的颜色
+            $("#dialog").css({display: "block"});//通过Jquery的css()更改样式
+            $("#dialogmask").css({display: "block"});
+            $("#logcontent").html("<body>\n" +
+                "<div class=\"main\">\n" +
+                "    <div class=\"title\">\n" +
+                "        <span>请输入登录账户和密码</span>\n" +
+                "    </div>\n" +
+                " \n" +
+                "    <form class=\"login-form\" method=\"post\" novalidate >\n" +
+                "        <!--输入框-->\n" +
+                "        <div class=\"input-content\">\n" +
+                "            <!--autoFocus-->\n" +
+                "            <div>\n" +
+                "                <input type=\"text\" autocomplete=\"off\"\n" +
+                "                       placeholder=\"用户名\" name=\"userNameOrEmailAddress\" required/>\n" +
+                "            </div>\n" +
+                " \n" +
+                "            <div style=\"margin-top: 16px\">\n" +
+                "                <input type=\"password\"\n" +
+                "                       autocomplete=\"off\" placeholder=\"登录密码\" name=\"password\" required maxlength=\"32\"/>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                " \n" +
+                "        <!--登入按钮-->\n" +
+                "        <div style=\"text-align: center\">\n" +
+                "            <button type=\"submit\" class=\"enter-btn\" >登录</button>\n" +
+                "        </div>\n" +
+                " \n" +
+                "        <div class=\"foor\">\n" +
+                "            <div class=\"left\"><span>忘记密码 ?</span></div>\n" +
+                " \n" +
+                "            <div class=\"right\"><span>注册账户</span></div>\n" +
+                "        </div>\n" +
+                "    </form>\n" +
+                " \n" +
+                "</div>\n" +
+                "</body>");
+        }
+
+        function closepop() {//关闭弹框
+            $("#dialog").css({display: "none"});
+            $("#dialogmask").css({display: "none"});
+        }
+    </script>
+    <script type="text/javascript">
+        function change(a) {
+            document.getElementById(a).style.backgroundColor = "#f5f7fa";
+            document.getElementById("menu" + a).style.color = "#000"
+            event.stopPropagation();
+        }
+        function change_(a) {
+            document.getElementById(a).style.backgroundColor = "";
+            document.getElementById("menu" + a).style.color = "#fff"
+            event.stopPropagation();
+        }
+        function change_btn(a) {
+            document.getElementById('btn').style.color = "#fff";
+            document.getElementById('btn').style.backgroundColor = "#1a78ff";
+        }
+        function fff(){
+            document.getElementById('menue').style.display = "none";
+        }
+        function change_btn_(a) {
+            document.getElementById('btn').style.backgroundColor = "#fff";
+            document.getElementById('btn').style.color = "#1a78ff";
+
+        }
+        function to_preview(index) {
+            console.log(index)
+            var daer = document.getElementById('dataid').getAttribute('data')
+            var data = eval('(' + daer + ')')
+            var file_id = data[index]['file_id'];
+            console.log(file_id)
+            window.location.href = "../data_preview?file_id=" + file_id;
+        }
+        function to_preview_() {
+            var file_id = document.getElementById("menue").getAttribute("file_id");
+            window.location.href = "../data_preview?file_id=" + file_id;
+        }
+        function upload() {
+            document.getElementById('no_click').style.display = "";
+            document.getElementById('up_file').style.display = "";
+        }
+        function off() {
+            document.getElementById('no_click').style.display = "none";
+            document.getElementById('up_file').style.display = "none";
+            document.getElementById('delet').style.display = "none";
+            location.reload();
+        }
+        function up_file() {
+            document.getElementById("cameraInput").click();
+        }
+        function ch1() {
+            document.getElementById("cameraInputCon").style = "border: 2px dashed #1a78ff;"
+            document.getElementById("word").style.color = "#1a78ff"
+        }
+        function ch2() {
+            document.getElementById("cameraInputCon").style = "border: 2px dashed #9195A3;"
+            document.getElementById("word").style.color = ""
+        }
+        function upup(target, id) {
+            var fileSize = target.files[0].size;
+            var size = fileSize / 1024;
+            if (size > 10240) {
+                alert("数据文件大小不能大于10M！");
+                target.value = "";
+                return false;
+            }
+            document.getElementById("submit").click();
+            document.getElementById('up_file').style.display = "none";
+        }
+        // function chch(){
+        //     document.getElementById("menu").style.color="#1a78ff";
+        // }
+        // function chch_(){
+        //     document.getElementById("menu").style.color="#000";
+        // }
+        function menu(index) {
+            event.stopPropagation();
+            var e = event || window.event;
+            document.getElementById("menue").style.display = "";
+            console.log(e.clientX, e.clientY)
+            document.getElementById("menue").style.top = e.clientY + "px";
+            document.getElementById("menue").style.left = e.clientX + "px";
+            var daer = document.getElementById('dataid').getAttribute('data')
+            var data = eval('(' + daer + ')')
+            var file_id = data[index]['file_id'];
+            var file_name = data[index]['file_name'];
+            document.getElementById("menue").setAttribute("file_id", file_id);
+            document.getElementById("menue").setAttribute("file_name", file_name);
+        }
+        function chspan(i) {
+            var ls = document.getElementsByClassName("ss");
+            ls[i].style.backgroundColor = "#f5f7fa";
+
+        }
+        function chspan_(i) {
+            var ls = document.getElementsByClassName("ss");
+            ls[i].style.backgroundColor = "#fff";
+        }
+        function rename() {
+            document.getElementById('rename').style.display = "";
+            document.getElementById('no_click').style.display = "";
+            document.getElementById('menue').style.display = "none";
+            var file_name = document.getElementById("menue").getAttribute("file_name");
+            document.getElementById('file_re').value=file_name;
+            document.getElementById('file_re').setAttribute("autofocus", "autofocus")
+        }
+        function rename_sub(){
+            var file_id = document.getElementById("menue").getAttribute("file_id");
+            document.getElementById('file_').value=file_id;
+        }
+        function dele(){
+            document.getElementById('delet').style.display = "";
+            document.getElementById('no_click').style.display = "";
+            document.getElementById('menue').style.display = "none";
+            var file_id = document.getElementById("menue").getAttribute("file_id");
+            document.getElementById('file_dell').value=file_id;
+        }
+
+        function to_data_analysis() {
+            var file_id = document.getElementById("menue").getAttribute("file_id");
+            var file_name = document.getElementById("menue").getAttribute("file_name");
+
+            // localStorage.clear();
+            localStorage.setItem('fileName', file_name);
+            localStorage.setItem('fileId', file_id);
+            // var fileName = localStorage.getItem('fileName');
+            // var fileId = localStorage.getItem('fileId');
+            //
+            // console.log(fileName);
+
+            window.location.href = "../dataAnalysis"
+        }
+
+    </script>
+
+    <script src="../static/js/vue.js"></script>
+    <script src="../static/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
+
+    <script src="../static/js/axios-0.18.0.js"></script>
+
+</head>
+
+<body>
+<div id="dialog" class="box" style="display: none">　
+    <div id="dialog_title" class="dialogtitle">
+        <label style="padding-left: 10px">登录</label>
+        <label style="float: right;padding-right: 10px;" onclick="closepop()">[关闭]</label>
+    </div>
+    　　
+    <div id="dialog_content" class="dialogcontent">
+        <div id="logcontent" class="logcontent">要显示的内容区域~</div>
+        　　
+    </div>
+    　　　　
+</div>
+
+    <div id="dataid" data="{{data}}" num="{{file_num}}" style="display:none"></div>
+
+
+    <div class="navigation" style="height: 40px;">
+        <a style="margin-left: 1%;font-size: 18px;line-height: 40px;">我的数据</a>
+        <button id="btn"
+            style="color: #1a78ff; background: #fff; border-color: #1a79ff61; line-height: 1; font-weight: 400;padding: 9px 15px;float:right;cursor: pointer;"
+            onclick="upload()" onmouseover="change_btn()" onmouseout="change_btn_()"> 上传文件 </button>
+    </div>
+    <hr>
+    <div class="box_item" id="box_">
+        {% for i in file_num|get_range %}
+        <div class="list_item" id="{{i}}" style="text-align:center;" onmouseover="change({{i}})"
+            onmouseout="change_({{i}})" onclick="to_preview({{i}})">
+            <div id="menu{{i}}"
+                style="display:block;font-size: 13px;text-align: left;font-weight: bold;width: 1%;margin-left: 75%;padding-top: 3%; padding-right: 26%; color: #fff;z-index: 9999;"
+                onclick="menu({{i}})">&nbsp&nbsp&nbsp···</div>
+            <svg xmlns="http://www.w3.org/2000/svg" height="90" viewBox="0 0 36 36" width="90">
+                <g fill="none" fill-rule="evenodd">
+                    <path d="m0 0h36v36h-36z" />
+                    <g fill-rule="nonzero" transform="translate(6 1.333333)">
+                        <path d="m15.75 0 8.25 8.25-4.125.75-4.125-.75-.75-4.125z" fill="#188038" />
+                        <path
+                            d="m15.75 8.25v-8.25h-13.5c-1.243125 0-2.25 1.006875-2.25 2.25v28.5c0 1.243125 1.006875 2.25 2.25 2.25h19.5c1.243125 0 2.25-1.006875 2.25-2.25v-22.5z"
+                            fill="#34a853" />
+                        <path
+                            d="m4.5 12.75v10.875h15v-10.875zm6.5625 9h-4.6875v-2.625h4.6875zm0-4.5h-4.6875v-2.625h4.6875zm6.5625 4.5h-4.6875v-2.625h4.6875zm0-4.5h-4.6875v-2.625h4.6875z"
+                            fill="#fff" />
+                    </g>
+                </g>
+            </svg>
+            <br>
+        </div>
+        {% endfor %}
+
+    </div>
+
+
+    <div id="no_click"
+        style="position:absolute; width: 100%; height: 100%;background-color: rgba(0, 0, 0, 0.5);left: 0;top: 0;text-align: center; display: none; "
+        onclick="off()">
+        <div style="position: relative;top: 45%; ">
+            <img src="../static/imgic/loading.gif">
+        </div>
+    </div>
+
+
+    <div id="up_file" style="display:none">
+        <div
+            style="position:absolute; width: 65%; height: 90%;background-color: #ffffff;left:17.5%; top: 5%;border-radius:10px">
+            <div
+                style="background-color: #f5f7fa; border-radius:10px 10px 0% 0%;height: 6%;width: 100%; position: absolute;">
+                <a style="margin-left: 3%;line-height: 60px; font-size: 30px;"> 上传数据</a>
+                <a title="关闭"
+                    style="display:block;float: right;margin-right: 2%; list-style: none;font-size: 30px;line-height: 60px;cursor: pointer;font-style: normal;color: #9195A3;text-align: right;"
+                    onclick="off();">X</a>
+            </div>
+            <div style="margin-left: 3%; margin-right: 3%;margin-top: 6%;margin-bottom: 6%; position: absolute; height: 88%;width:94%; cursor:pointer;"
+                onmouseover="ch1()" onmouseout="ch2()">
+                <div class="cameraInputCon" id="cameraInputCon" style="border: 2px dashed #9195A3;">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" id="cameraInput" name="myfile"
+                            accept=".csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            onchange="upup(this);" />
+                        <button type="submit" id="submit" style="display: none;"></button>
+                    </form>
+
+                    <a id="word"
+                        style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size: 30px;"
+                        onclick="up_file()">点击或拖拽上传文件</a>
+                </div>
+                <style>
+                    .cameraInputCon {
+                        width: 100%;
+                        height: 100%;
+                        cursor: pointer;
+                        text-align: center;
+                        /* line-height: 1100%; */
+                        border-radius: 10px;
+                        position: relative;
+                        background-color: #f5f7fa;
+                    }
+
+                    #cameraInput {
+                        width: 100%;
+                        height: 100%;
+                        cursor: pointer;
+                        border-radius: 10px;
+                        opacity: 0;
+                        position: absolute;
+                        left: 0px;
+                        top: 0px;
+                    }
+                </style>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="menue" style="width: 120px;z-index: 2015; position: absolute; display: none;">
+        <ul
+            style="cursor: pointer; background-color: #fff;padding-inline-start:0;padding-top: 5%;box-shadow: rgba(128, 128, 128, 0.3) 2px 2px 4px 4px ;border-radius:5px;">
+            <li style="height: 36px;list-style-type: none;left: 0;">
+                <span class="ss" style="display: block; line-height: 36px;" onmouseover="chspan(0);"
+                    onmouseout="chspan_(0);" onclick="to_preview_()">
+                    <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        style="position: relative;padding-left:13%; padding-top: 7%;display: block;float: left;">
+                        <g id="内页" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="数据管理/有数据/复制成功" transform="translate(-546.000000, -444.000000)">
+                                <g id="编组-3" transform="translate(529.000000, 427.000000)">
+                                    <g id="编组" transform="translate(15.000000, 16.000000)">
+                                        <polygon id="路径" points="0 0 20 0 20 20 0 20"></polygon>
+                                        <path
+                                            d="M12.5,3.33333333 L4.16666667,3.33333333 L4.16666667,16.6666667 L15.8333333,16.6666667 L15.8333333,6.66666667 L12.5,6.66666667 L12.5,3.33333333 Z M2.5,2.49333333 C2.5,2.03666667 2.8725,1.66666667 3.3325,1.66666667 L13.3333333,1.66666667 L17.5000206,5.83333333 L17.5000206,17.4941667 C17.5015525,17.715182 17.4152406,17.9277613 17.2600531,18.0851368 C17.1048656,18.2425123 16.8935154,18.3317916 16.6725,18.3333333 L3.3275,18.3333333 C2.87212962,18.3301601 2.503632,17.9620336 2.5,17.5066667 L2.5,2.49333333 Z M9.16666667,9.16666667 L10.8333333,9.16666667 L10.8333333,14.1666667 L9.16666667,14.1666667 L9.16666667,9.16666667 Z M9.16666667,5.83333333 L10.8333333,5.83333333 L10.8333333,7.5 L9.16666667,7.5 L9.16666667,5.83333333 Z"
+                                            id="形状" fill="#6A6F77" fill-rule="nonzero"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </svg><a style="padding-left: 5px;">查看详情</a>
+                </span>
+            </li>
+            <li style="height: 36px;list-style-type: none;left: 0;">
+                <span class="ss" style="display: block; line-height: 36px;" onmouseover="chspan(1);"
+                    onmouseout="chspan_(1);">
+                    <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        style="position: relative;padding-left:13%;padding-top: 7%;display: block;float: left;">
+                        <g id="icon/数据分析/线性/灰" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="pie-chart-line">
+                                <polygon id="路径" points="0 0 20 0 20 20 0 20"></polygon>
+                                <path
+                                    d="M10,18.3333333 C5.3975,18.3333333 1.66666667,14.6025 1.66666667,10 C1.66666667,6.26833333 4.11916667,3.11 7.5,2.04833333 L7.5,3.81833333 C4.54554996,5.01801243 2.85367759,8.14125961 3.46271167,11.2712888 C4.07174575,14.4013179 6.81127204,16.6623134 10,16.6666667 C12.7169123,16.6665917 15.162188,15.0183875 16.1816667,12.5 L17.9516667,12.5 C16.89,15.8808333 13.7316667,18.3333333 10,18.3333333 Z M18.2916667,10.8333333 L9.16666667,10.8333333 L9.16666667,1.70833333 C9.44083333,1.68083333 9.71916667,1.66666667 10,1.66666667 C14.6025,1.66666667 18.3333333,5.3975 18.3333333,10 C18.3333333,10.2808333 18.3191667,10.5591667 18.2916667,10.8333333 Z M10.8333333,3.385 L10.8333333,9.16666667 L16.615,9.16666667 C16.2334522,6.14564088 13.8543591,3.76654784 10.8333333,3.385 Z"
+                                    id="形状" fill="#6A6F77" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </svg><a style="padding-left: 5px;" onclick="to_data_analysis()">数据分析</a>
+                </span>
+            </li>
+            <li style="height: 36px;list-style-type: none;left: 0;">
+                <span class="ss" style="display: block; line-height: 36px;" onmouseover="chspan(2);"
+                    onmouseout="chspan_(2);" onclick="rename();">
+                    <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        style="position: relative;padding-left:13%;padding-top: 7%;display: block;float: left;">
+                        <g id="icon/重命名" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="edit-line">
+                                <polygon id="路径" points="0 0 20 0 20 20 0 20"></polygon>
+                                <path
+                                    d="M5.345,13.3333333 L13.7966667,4.88166667 L12.6183333,3.70333333 L4.16666667,12.155 L4.16666667,13.3333333 L5.345,13.3333333 Z M6.03583333,15 L2.5,15 L2.5,11.4641667 L12.0291667,1.935 C12.3545832,1.60968172 12.8820835,1.60968172 13.2075,1.935 L15.565,4.2925 C15.8903183,4.61791654 15.8903183,5.14541679 15.565,5.47083333 L6.03583333,15 Z M2.5,16.6666667 L17.5,16.6666667 L17.5,18.3333333 L2.5,18.3333333 L2.5,16.6666667 Z"
+                                    id="形状" fill="#6A6F77" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </svg><a style="padding-left: 5px;">重命名</a>
+                </span>
+            </li>
+            <li style="height: 36px;list-style-type: none;left: 0;">
+                <span class="ss" style="display: block; line-height: 36px;" onmouseover="chspan(3);"
+                    onmouseout="chspan_(3);" onclick="dele()">
+                    <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        style="position: relative;padding-left:13%;padding-top: 7%;display: block;float: left;">
+                        <g id="icon/删除" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="delete-bin-line备份-2">
+                                <polygon id="路径" points="0 0 20 0 20 20 0 20"></polygon>
+                                <path
+                                    d="M14.1666667,5 L18.3333333,5 L18.3333333,6.66666667 L16.6666667,6.66666667 L16.6666667,17.5 C16.6666667,17.9602373 16.2935706,18.3333333 15.8333333,18.3333333 L4.16666667,18.3333333 C3.70642938,18.3333333 3.33333333,17.9602373 3.33333333,17.5 L3.33333333,6.66666667 L1.66666667,6.66666667 L1.66666667,5 L5.83333333,5 L5.83333333,2.5 C5.83333333,2.03976271 6.20642938,1.66666667 6.66666667,1.66666667 L13.3333333,1.66666667 C13.7935706,1.66666667 14.1666667,2.03976271 14.1666667,2.5 L14.1666667,5 Z M15,6.66666667 L5,6.66666667 L5,16.6666667 L15,16.6666667 L15,6.66666667 Z M7.5,9.16666667 L9.16666667,9.16666667 L9.16666667,14.1666667 L7.5,14.1666667 L7.5,9.16666667 Z M10.8333333,9.16666667 L12.5,9.16666667 L12.5,14.1666667 L10.8333333,14.1666667 L10.8333333,9.16666667 Z M7.5,3.33333333 L7.5,5 L12.5,5 L12.5,3.33333333 L7.5,3.33333333 Z"
+                                    id="形状" fill="#6A6F77" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </svg><a style="padding-left: 5px;">删除</a>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div id="rename" style="display: none; position:absolute; width: 28%; height: 25%;background-color: #fff;left:36%; top: 37%;border-radius:10px">
+        <div  style="background-color: #fff; border-radius:10px 10px 0% 0%;height: 25%;width: 100%; position: absolute;">
+            <a style="margin-left: 3%;line-height: 40px; font-size: 20px;"> 重命名</a>
+            <a title="关闭"
+                style="display:block;float: right;margin-right: 3%; list-style: none;font-size: 20px;line-height: 40px;cursor: pointer;font-style: normal;color: #9195A3;text-align: right;"
+                onclick="off();">X</a>
+        </div>
+        <br>
+        <br>
+        <div style="display: block;position: relative;width: 100%;height: 50%;top: 13%; text-align: center;">
+            <form  action="../rename/" method="POST" style=" height: 200%;position: relative;text-align: center;">
+                {% csrf_token %}
+                <input id="file_re" type="text" name="rename" style="text-align: left; border: 1px solid rgba(0, 0, 0, 0.5);position: relative;left: 1%;height: 20%;width: 85%;font-size: 18px;" autofocus>
+                <input id="file_" type="text" name="file_id" style="display: none;">
+                <br>
+                <div style="float: right;margin-right: 8%;margin-top: 7%;">
+                    <button type="submit" style="background: #2672ff; border: 1px solid #2672ff;color: #fff; padding: 6px 30px;float:right;cursor: pointer;" onclick="rename_sub();">确认</button>
+                    <button type="reset" style="background: #fff;border: 1px solid rgba(0, 0, 0, 0.5); padding: 6px 30px;float:right;cursor: pointer;margin-right: 10px;" onclick="off();">取消</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    <div id="delet" style="display: none; position:absolute; width: 20%; height: 16%;background-color: #fff;left:40%; top: 42%;border-radius:10px">
+        <div  style="background-color: #fff; border-radius:10px 10px 0% 0%;height: 25%;width: 100%; position: absolute;">
+            <a style="margin-left: 3%;line-height: 40px; font-size: 20px;">删除文件</a>
+            <a title="关闭"
+                style="display:block;float: right;margin-right: 3%; list-style: none;font-size: 20px;line-height: 40px;cursor: pointer;font-style: normal;color: #9195A3;text-align: right;"
+                onclick="off();">X</a>
+        </div>
+        
+        <div style="display: block;position: relative;width: 100%;height: 50%;top: 13%; text-align: left;">
+            <p style="padding-left: 3%;">确认要删除此文件吗？</p>
+            <form  action="../delet/" method="POST" style=" height: 200%;position: relative;text-align: center;">
+                {% csrf_token %}
+                <input id="file_dell" type="text" name="file_id" style="display: none;">
+                <br>
+                <div style="float: right;margin-right: 5%;margin-top: 7%;">
+                    <button type="submit" style="background: #2672ff; border: 1px solid #2672ff;color: #fff; padding: 6px 30px;float:right;cursor: pointer;">确认</button>
+                    <button type="reset" style="background: #fff;border: 1px solid rgba(0, 0, 0, 0.5); padding: 6px 30px;float:right;cursor: pointer;margin-right: 10px;" onclick="off();">取消</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    <script>
+        var htmlout = document.getElementById('box_')
+        var daer = document.getElementById('dataid').getAttribute('data')
+        var num = document.getElementById('dataid').getAttribute('num')
+        var data = eval('(' + daer + ')')
+        console.log(num)
+        for (var i = 0; i < num; i++) {
+            document.getElementById(i).insertAdjacentText("beforeEnd", data[i]['file_name']);
+        }
+    </script>
+<script>
+    new Vue({
+        el: "#app",
+
+        mounted() {
+            this.selectAll();
+        },
+        methods: {
+            selectAll() {
+                var _this = this;
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/manager/user/selectByPage?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data: this.user
+                }).then(resp => {
+                    //设置表格数据
+                    this.tableData = resp.data.rows; // {rows:[],totalCount:100}
+                    //设置总记录数
+                    this.totalCount = resp.data.totalCount;
+                })
+            },
+            //分页
+            handleSizeChange(val) {
+                //console.log(`每页 ${val} 条`);
+                // 重新设置每页显示的条数
+                this.pageSize = val;
+                this.selectAll();
+            },
+            handleCurrentChange(val) {
+                //console.log(`当前页: ${val}`);
+                // 重新设置当前页码
+                this.currentPage = val;
+                this.selectAll();
+            },
+            onselect() {
+                this.selectAll();
+            }
+        },
+        data() {
+            const item = {
+                name: '王小虎',
+                password: '123456',
+                permission: '学生'
+            };
+            return {
+                // 每页显示的条数
+                pageSize: 10,
+                // 总记录数
+                totalCount: 100,
+                // 当前页码
+                currentPage: 1,
+                tableData: Array(20).fill(item)
+            }
+        }
+    })
+
+</script>
+
+
+
+</body>
+
+</html>

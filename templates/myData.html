@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+     <!--适配安卓-->
+        <meta charset="utf-8" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+            name="viewport" />
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+        .el-header {
+            /*background-color: #B3C0D1;*/
+            color: #333;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            color: #333;
+        }
+
+        .list_item {
+            position: relative;
+            width: 150px;
+            height: 160px;
+            /* margin: 0 auto; */
+            margin-right: 20px;
+            margin-top: 22px;
+            cursor: pointer;
+        }
+
+        .box_item {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 0 0 20px;
+            min-height: 182px;
+            align-content: flex-start;
+            margin: 0 auto;
+        }
+    </style>
+    <style>
+
+
+        /** {*/
+        /*    padding: 0;*/
+        /*    margin: 0;*/
+        /*}*/
+
+        .main {
+            /*background-color: #0a6332;*/
+            margin: 0 auto;
+            padding-left: 25px;
+            padding-right: 25px;
+            padding-top: 15px;
+            width: 50%;
+            height: 350px;
+            background: #FFFFFF;
+            /*以下css用于让登录表单垂直居中在界面,可删除*/
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            left: 42%;
+            margin-top: -175px;
+            margin-left: -175px;
+        }
+
+        .title {
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .title span {
+            font-size: 18px;
+            color: #353f42;
+        }
+
+        .title-msg {
+            width: 100%;
+            height: 64px;
+            line-height: 64px;
+        }
+
+        .title:hover {
+            cursor: default;
+        }
+
+        .title-msg:hover {
+            cursor: default;
+        }
+
+        .title-msg span {
+            font-size: 12px;
+            color: #707472;
+        }
+
+        .input-content {
+            width: 100%;
+            height: 120px;
+        }
+
+        .input-content input {
+            width: 330px;
+            height: 40px;
+            border: 1px solid #dad9d6;
+            background: #ffffff;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .enter-btn {
+            width: 350px;
+            height: 40px;
+            color: #fff;
+            background: #0bc5de;
+            line-height: 40px;
+            text-align: center;
+            border: 0px;
+        }
+
+        .foor {
+            width: 100%;
+            height: auto;
+            color: #9b9c98;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .enter-btn:hover {
+            cursor: pointer;
+            background: #1db5c9;
+        }
+
+        .foor div:hover {
+            cursor: pointer;
+            color: #484847;
+            font-weight: 600;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+    </style>
+    <style>
+        .dialogmask {
+            position: fixed;
+            top: 0px;
+            height: 100%;
+            width: 100%;
+            z-index: 80;
+            display: none;
+
+        }
+
+        .opacity { /*遮罩浑浊处理*/
+            opacity: 0.3;
+            filter: alpha(opacity=30);
+            background-color: #000;
+        }
+
+        .box {
+            overflow: hidden;
+            position: absolute;
+            width: 30%;
+            height: 40%;
+            z-index: 100; /*值越大，和其他层层叠时越在上面*/
+            left: 35%;
+            top: 30%;
+            background-color: #fff;
+            border: 1px solid rgb(0, 153, 153);
+        }
+
+        .dialogtitle {
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            position: absolute;
+            font-size: 18px;
+            top: 0px;
+            background-color: lightgrey;
+        }
+
+        .dialogcontent {
+            padding-top: 20px;
+            OVERFLOW: scroll;
+            height: calc(100% - 20px);
+            height: -webkit-calc(100% - 20px);
+        }
+
+        .logcontent {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        //显示弹框，并且根据结果是true或false来更改标题部分的颜色
+        function showlog_result(result) {//展示具体弹框内容，以及根据结果是否正确变更title的颜色
+            $("#dialog").css({display: "block"});//通过Jquery的css()更改样式
+            $("#dialogmask").css({display: "block"});
+            $("#logcontent").html(
+                "<body>\n" +
+                "<div class=\"main\">\n" +
+                "    <div class=\"title\">\n" +
+                "        <span>请输入登录账户和密码</span>\n" +
+                "    </div>\n" +
+                " \n" +
+                "    <form class=\"login-form\" method=\"post\" novalidate >\n" +
+                "        <!--输入框-->\n" +
+                "        <div class=\"input-content\">\n" +
+                "            <!--autoFocus-->\n" +
+                "            <div>\n" +
+                "                <input type=\"text\" autocomplete=\"off\"\n" +
+                "                       placeholder=\"用户名\" name=\"userNameOrEmailAddress\" required/>\n" +
+                "            </div>\n" +
+                " \n" +
+                "            <div style=\"margin-top: 16px\">\n" +
+                "                <input type=\"password\"\n" +
+                "                       autocomplete=\"off\" placeholder=\"登录密码\" name=\"password\" required maxlength=\"32\"/>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                " \n" +
+                "        <!--登入按钮-->\n" +
+                "        <div style=\"text-align: center\">\n" +
+                "            <button type=\"\" class=\"enter-btn\" >登录</button>\n" +
+                "        </div>\n" +
+                " \n" +
+                "        <div class=\"foor\">\n" +
+                "            <div class=\"left\"><span>忘记密码 ?</span></div>\n" +
+                " \n" +
+                "            <div class=\"right\"><span>注册账户</span></div>\n" +
+                "        </div>\n" +
+                "    </form>\n" +
+                " \n" +
+                "</div>\n" +
+                "</body>");
+        }
+
+        function closepop() {//关闭弹框
+            $("#dialog").css({display: "none"});
+            $("#dialogmask").css({display: "none"});
+        }
+    </script>
+    <script>
+        function to_data_analysis() {
+            document.getElementById("ifr").setAttribute("src", "../dataAnalysis")
+            // window.location.href = "../dataAnalysis"
+        }
+
+        function to_myData() {
+            document.getElementById("ifr").setAttribute("src", "../data_list")
+            // window.location.href = "../myData"
+        }
+    </script>
+    <script type="text/javascript">
+        function change(a) {
+            document.getElementById(a).style.backgroundColor = "#f5f7fa";
+        }
+
+        function change_(a) {
+            document.getElementById(a).style.backgroundColor = "";
+        }
+
+        function change_btn(a) {
+            document.getElementById('btn').style.color = "#fff";
+            document.getElementById('btn').style.backgroundColor = "#1a78ff";
+        }
+
+        function change_btn_(a) {
+            document.getElementById('btn').style.backgroundColor = "#fff";
+            document.getElementById('btn').style.color = "#1a78ff";
+
+        }
+
+        function to_preview(index) {
+            var daer = document.getElementById('dataid').getAttribute('data')
+            var data = eval('(' + daer + ')')
+            var file_id = data[index]['file_id'];
+            console.log(file_id)
+            window.location.href = "../data_preview?file_id=" + file_id;
+        }
+
+        function upload() {
+            document.getElementById('no_click').style.display = "";
+            document.getElementById('up_file').style.display = "";
+        }
+
+        function off() {
+            document.getElementById('no_click').style.display = "none";
+            document.getElementById('up_file').style.display = "none";
+            location.reload();
+        }
+
+        function up_file() {
+            document.getElementById("cameraInput").click();
+            // 设置方法
+            sessionStorage.setItem('name', 'all right');
+
+        }
+
+        function ch1() {
+            document.getElementById("cameraInputCon").style = "border: 2px dashed #1a78ff;"
+            document.getElementById("word").style.color = "#1a78ff"
+        }
+
+        function ch2() {
+            document.getElementById("cameraInputCon").style = "border: 2px dashed #9195A3;"
+            document.getElementById("word").style.color = ""
+        }
+
+        function upup(target, id) {
+            var fileSize = target.files[0].size;
+            var size = fileSize / 1024;
+            if (size > 10240) {
+                alert("数据文件大小不能大于10M！");
+                target.value = "";
+                return false;
+            }
+            document.getElementById("submit").click();
+        }
+
+        function chch() {
+            document.getElementById("menu").style.color = "#1a78ff";
+        }
+
+        function chch_() {
+            document.getElementById("menu").style.color = "";
+        }
+
+        function menu(index) {
+            var daer = document.getElementById('dataid').getAttribute('data')
+            var data = eval('(' + daer + ')')
+            var file_id = data[index]['file_id'];
+
+        }
+    </script>
+</head>
+
+<body>
+<div id="dialogmask" class="dialogmask opacity"></div>
+<div id="dialog" class="box" style="display: none">　
+    <div id="dialog_title" class="dialogtitle">
+        <label style="padding-left: 10px">登录</label>
+        <label style="float: right;padding-right: 10px;" onclick="closepop()">[关闭]</label>
+    </div>
+    　　
+    <div id="dialog_content" class="dialogcontent">
+        <div id="logcontent" class="logcontent">要显示的内容区域~</div>
+        　　
+    </div>
+    　　　　
+</div>
+<div id="app">
+    <el-container style="height: 100%; border: 1px solid #eee">
+        <el-header style="height: 100%;" align="center" >
+            <el-menu class="el-menu-demo" mode="horizontal" default-active="1">
+
+                <el-menu-item index="1" style="width: 40%;" onclick="to_myData()">
+                    <template>我的数据</template>
+                </el-menu-item>
+                <el-menu-item index="2" style="width: 40%;" onclick="to_data_analysis()">
+                    <template>数据分析</template>
+                </el-menu-item>
+                <el-button type="text" style="width: 18%; text-align: right;" onclick="showlog_result(true)">
+                    <el-avatar icon="el-icon-user-solid" onclick="showlog_result(true)">
+                    </el-avatar>
+                </el-button>
+            </el-menu>
+        </el-header>
+    </el-container>
+
+<!--    <el-container>-->
+
+<!--    </el-container>-->
+
+</div>
+<div style="position: fixed; height: 100%;width: 100%">
+    <iframe id="ifr" src="../data_list" height="100%" width="99%" style="border: 0"></iframe>
+</div>
+
+
+<script src="../static/js/vue.js"></script>
+<script src="../static/element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="../static/element-ui/lib/theme-chalk/index.css">
+
+<script src="../static/js/axios-0.18.0.js"></script>
+
+<script>
+    var htmlout = document.getElementById('box_')
+    var daer = document.getElementById('dataid').getAttribute('data')
+    var num = document.getElementById('dataid').getAttribute('num')
+    var data = eval('(' + daer + ')')
+    console.log(num)
+    for (var i = 0; i < num; i++) {
+        document.getElementById(i).insertAdjacentText("beforeEnd", data[i]['file_name']);
+    }
+</script>
+
+<script>
+    new Vue({
+        el: "#app",
+
+        mounted() {
+            this.selectAll();
+        },
+        methods: {
+            selectAll() {
+                var _this = this;
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/manager/user/selectByPage?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                    data: this.user
+                }).then(resp => {
+                    //设置表格数据
+                    this.tableData = resp.data.rows; // {rows:[],totalCount:100}
+                    //设置总记录数
+                    this.totalCount = resp.data.totalCount;
+                })
+            },
+            //分页
+            handleSizeChange(val) {
+                //console.log(`每页 ${val} 条`);
+                // 重新设置每页显示的条数
+                this.pageSize = val;
+                this.selectAll();
+            },
+            handleCurrentChange(val) {
+                //console.log(`当前页: ${val}`);
+                // 重新设置当前页码
+                this.currentPage = val;
+                this.selectAll();
+            },
+            onselect() {
+                this.selectAll();
+            }
+        },
+        data() {
+            const item = {
+                name: '王小虎',
+                password: '123456',
+                permission: '学生'
+            };
+            return {
+                // 每页显示的条数
+                pageSize: 10,
+                // 总记录数
+                totalCount: 100,
+                // 当前页码
+                currentPage: 1,
+                tableData: Array(20).fill(item)
+            }
+        }
+    })
+
+</script>
+</body>
+</html>

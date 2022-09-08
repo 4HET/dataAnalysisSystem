@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<link rel="stylesheet" href="../static/css/xspreadsheet.css">
+<script src="../static/js/xspreadsheet.js"></script>
+<script src="../static/js/zh-cn.js"></script>
+
+<body>
+    <div id="dataid" d="{{data}}" style="display:none"></div>
+    <style>
+        .navigation{
+            background: #ffffff;
+            font-size: 18px;
+            font-family: sans-serif
+            
+        }
+    </style>
+    <div class="navigation">
+        <a href="../data_list" style="text-decoration:none;cursor: pointer;">我的数据</a>
+        <span class="">/</span>
+        <span style="font-weight: 800">{{file_name}}</span>
+    </div>
+    <div id="x-spreadsheet-demo">
+        <script>
+            x_spreadsheet.locale('zh-cn');  //中文
+            x_spreadsheet.mode = "read";
+            var htmlout = document.getElementById('x-spreadsheet-demo')
+            var daer = document.getElementById('dataid').getAttribute('d')
+
+            rows2 = eval('(' + daer + ')');
+
+            // console.log(type(daer))
+            data2 = [{ "name": "表格", "rows": rows2, "cols":{"len":200}} ]// 拼接,注意可以放多张表
+            var xs = x_spreadsheet(htmlout).loadData(data2)
+        </script>
+    </div>
+
+</body>
+
+</html>
