@@ -15,3 +15,8 @@ def mysql(sql, ty=0):
         cur.close()
         conn.close()
         return
+
+if __name__ == '__main__':
+    sql = 'SELECT file_name, file_id FROM file_info WHERE file_user="123";'
+    file_data = list(mysql(sql, 1))
+    print(file_data)

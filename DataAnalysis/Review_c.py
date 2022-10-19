@@ -1,6 +1,3 @@
-# -*- coding:utf-8 -*-
-# @Author: pioneer
-# @Environment: Python 3.7
 import requests
 import re
 import time
@@ -11,7 +8,7 @@ import sys
 import pprint
 import json
 import random
-from . import mysql
+# from . import mysql
 
 access_token = ""
 
@@ -116,5 +113,10 @@ def review_c(file_id, file_name):
         with open("DataAnalysis/per_data/" + file_n + ".csv", "a", encoding="utf-8", newline="") as f:
             f = csv.writer(f)
             f.writerow(ls)
-    sql = 'insert into file_info(file_name, file_id, file_user) values("{}", "{}", "{}");'.format("评论观点抽取结果_" + file_name, file_n, "123")
-    mysql.mysql(sql)
+
+    # sql = 'insert into file_info(file_name, file_id, file_user) values("{}", "{}", "{}");'.format("评论观点抽取结果_" + file_name, file_n, "123")
+    # mysql.mysql(sql)
+    file_name = "评论观点抽取结果_" + file_name
+    file_id = file_n
+    file_user = '123'
+    return {'file_name': file_name, 'file_id': file_id, 'file_user': file_user}

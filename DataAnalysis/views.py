@@ -1,31 +1,29 @@
-from pprint import pprint
-import re
+from django.http import HttpResponse, JsonResponse
+import json
+import time
+
+# import pymysql
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from . import dataTojson, Semantic_similarity
 from django.template.defaulttags import register
-import time
-import pymysql
-import pprint
-import json
-from . import Affective_analysis
-from . import Review_c
-from . import Word_vec
 
-def mysql(sql, ty=0):
-    conn = pymysql.connect(host="localhost", user="root", port=3306, passwd="123456", database="sheji")
-    cur = conn.cursor()
-    cur.execute(sql)
-    conn.commit()
-    if ty==1:
-        data = cur.fetchall()
-        cur.close()
-        conn.close()
-        return data
-    else:
-        cur.close()
-        conn.close()
-        return
+from DataAnalysis import dataTojson, Affective_analysis, Word_vec, Semantic_similarity, Review_c
+from fileInfo.models import file_info
+
+# def mysql(sql, ty=0):
+#     conn = pymysql.connect(host="localhost", user="root", port=3306, passwd="123456", database="sheji")
+#     cur = conn.cursor()
+#     cur.execute(sql)
+#     conn.commit()
+#     if ty==1:
+#         data = cur.fetchall()
+#         cur.close()
+#         conn.close()
+#         return data
+#     else:
+#         cur.close()
+#         conn.close()
+#         return
 
 
 
@@ -38,7 +36,10 @@ def data_preview(request):
         file_id=request.GET.get('file_id')
         data = dataTojson.file_to_json(file_id)
         sql = 'SELECT file_name FROM file_info WHERE file_id="{}";'.format(file_id)
-        file_name = mysql(sql, 1)[0][0]
+        sql_info = file_info.objects.filter(file_id=file_id)
+        file_name = sql_info
+        print(file_name)
+        # file_name = mysql(sql, 1)[0][0]
         print(json.loads(data))
         context = {
             'data': data,
@@ -54,7 +55,16 @@ def get_range(value):
 
 def get_file_list(user_id):
     sql = 'SELECT file_name, file_id FROM file_info WHERE file_user="{}";'.format(user_id)
-    file_data = list(mysql(sql, 1))
+    # file_data = list(mysql(sql, 1))
+    file_data = []
+    select_info = file_info.objects.filter(file_user=user_id)
+    for i in range(len(select_info)):
+        file_data.append((select_info[i].file_name, select_info[i].file_id))
+    # file_data = select_info
+    # print(file_data)
+    # for i in file_data:
+    #     file_data.append(i.file_name)
+    # print(file_data)
     dict1 = {}
     for i in range(len(file_data)):
         dict1[str(i)] = {}
@@ -80,9 +90,13 @@ def data_list(request):
         with open("DataAnalysis/per_data/{}.{}".format(str(user_id)+str(num), houzhui), "wb") as fi:
             for chunk in myFile.chunks():
                 fi.write(chunk)
-        sql = 'insert into file_info(file_name, file_id, file_user) values("{}", "{}", "{}");'.format(myFile.name, str(user_id)+str(num), user_id)
-        print(sql)
-        mysql(sql)
+        # sql = 'insert into file_info(file_name, file_id, file_user) values("{}", "{}", "{}");'.format(myFile.name, str(user_id)+str(num), user_id)
+        # print(sql)
+        ins_info = {'file_name': myFile.name,
+                     'file_id': str(user_id)+str(num),
+                     'file_user': user_id}
+        insert(ins_info)
+        # mysql(sql)
         context = get_file_list(user_id)
         request.FILES['myfile'] = None
         return redirect('../data_list')
@@ -96,7 +110,8 @@ def file_rename(request):
         file_name = request.POST["rename"]
         file_id = request.POST["file_id"]
         sql = 'UPDATE file_info SET file_name="{}" WHERE file_id={};'.format(file_name, file_id)
-        mysql(sql)
+        update(file_name, file_id)
+        # mysql(sql)
         return redirect('../data_list')
     else:
         return redirect('../data_list')
@@ -106,7 +121,8 @@ def file_delet(request):
     if request.method=="POST":
         file_id = request.POST["file_id"]
         sql = 'DELETE FROM file_info WHERE file_id={};'.format(file_id)
-        mysql(sql)
+        delete(file_id)
+        # mysql(sql)
         return redirect('../data_list')
     else:
         return redirect('../data_list')
@@ -147,7 +163,29 @@ def review_c(request):
         file_id = request.POST["file_id"]
         file_name = request.POST["file_name"]
 
-        Review_c.review_c(file_id, file_name)
+        info_dict = Review_c.review_c(file_id, file_name)
+        insert(info_dict)
+
+
         return redirect('../data_list')
     else:
         return redirect('../data_list')
+
+def insert(info_dict):
+    file_name = info_dict['file_name']
+    file_id = info_dict['file_id']
+    file_user = info_dict['file_user']
+
+    data = file_info(file_name=file_name,file_id=file_id,file_user=file_user)
+    data.save()
+
+def update(file_name, file_id):
+    # sql = 'UPDATE file_info SET file_name="{}" WHERE file_id={};'.format(file_name, file_id)
+    data = file_info.objects.get(file_id=file_id)
+    data.file_name = file_name
+    data.save()
+
+def delete(file_id):
+    sql = 'DELETE FROM file_info WHERE file_id={};'.format(file_id)
+    data = file_info.objects.get(file_id=file_id)
+    data.delete()

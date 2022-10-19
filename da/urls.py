@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from . import views
+from da import views
 
 urlpatterns = [
     path('dataAnalysis/', views.index),

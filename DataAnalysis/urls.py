@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include,re_path
+
+from DataAnalysis import views
+
 # from django.conf.urls import url
-from . import views
+# from . import views
 # from DataAnalysis.myData import views
 
 urlpatterns = [
@@ -22,4 +25,5 @@ urlpatterns = [
     path('', include("da.urls")),
     # path('myData/', include(("myData.urls", "myData"))),
     path('', include("myData.urls")),
+    path('', include("Visual.urls")),
 ]
